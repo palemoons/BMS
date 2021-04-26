@@ -41,7 +41,7 @@ function Landing() {
           <Typography variant="h5" className={classes.title}>
             Book Management System
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" href="/login">Login</Button>
         </Toolbar>
       </AppBar>
       <Container className={classes.landingTitle}>
