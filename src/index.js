@@ -6,7 +6,8 @@ import SignIn from './Pages/SignIn';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/">
           <Landing />
         </Route>
+        <Route render={() => <Redirect to="/"/>}/>
       </Switch>
     </div>
   );

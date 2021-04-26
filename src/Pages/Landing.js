@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '20vh',
     textAlign: 'center',
   },
-  searchButton:{
+  searchButton: {
     margin: '25px',
   }
 }));
@@ -35,13 +36,17 @@ function Landing() {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <IconButton edge="start" className={classes.icon} color="inherit" href="/">
-            <BookmarksRoundedIcon />
-          </IconButton>
+          <Link to="/">
+            <IconButton edge="start" className={classes.icon} style={{ color: 'white' }}>
+              <BookmarksRoundedIcon />
+            </IconButton>
+          </Link>
           <Typography variant="h5" className={classes.title}>
             Book Management System
           </Typography>
-          <Button color="inherit" href="/login">Login</Button>
+          <Link to="/login">
+            <Button style={{ color: 'white' }}>Login</Button>
+          </Link>
         </Toolbar>
       </AppBar>
       <Container className={classes.landingTitle}>
