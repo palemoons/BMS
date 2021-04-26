@@ -1705,6 +1705,13 @@
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
 
+"@material-ui/icons@^4.11.2":
+  version "4.11.2"
+  resolved "https://registry.nlark.com/@material-ui/icons/download/@material-ui/icons-4.11.2.tgz#b3a7353266519cd743b6461ae9fdfcb1b25eb4c5"
+  integrity sha1-s6c1MmZRnNdDtkYa6f38sbJetMU=
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+
 "@material-ui/styles@^4.11.3":
   version "4.11.3"
   resolved "https://registry.nlark.com/@material-ui/styles/download/@material-ui/styles-4.11.3.tgz?cache=0&sync_timestamp=1618927972823&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40material-ui%2Fstyles%2Fdownload%2F%40material-ui%2Fstyles-4.11.3.tgz#1b8d97775a4a643b53478c895e3f2a464e8916f2"
