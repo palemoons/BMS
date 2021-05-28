@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Landing from './Pages/Landing';
 import SignIn from './Pages/SignIn';
+import Query from './Pages/Query'
 import {
   BrowserRouter as Router,
   Switch,
@@ -17,6 +18,9 @@ function App() {
       <Switch>
         <Route path="/login">
           <SignIn />
+        </Route>
+        <Route path="/query">
+          <Query/>
         </Route>
         <Route path="/">
           <Landing />
