@@ -56,9 +56,11 @@ function Landing() {
         <Typography variant="subtitle1">
           Project for Database System Concept
       </Typography>
-        <Button variant="contained" color="primary" className={classes.searchButton}>
-          查询图书
-        </Button>
+        <Link to="/query">
+          <Button variant="contained" color="primary" className={classes.searchButton}>
+            查询图书
+          </Button>
+        </Link>
       </Container>
     </div>
   );
