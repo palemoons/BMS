@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Landing from './Pages/Landing';
 import SignIn from './Pages/SignIn';
-import Query from './Pages/Query'
+import Query from './Pages/Query';
+import Console from './Pages/Console';
 import {
   BrowserRouter as Router,
   Switch,
@@ -19,13 +20,16 @@ function App() {
         <Route path="/login">
           <SignIn />
         </Route>
+        <Route path="/console">
+          <Console />
+        </Route>
         <Route path="/query">
-          <Query/>
+          <Query />
         </Route>
         <Route path="/">
           <Landing />
         </Route>
-        <Route render={() => <Redirect to="/"/>}/>
+        <Route render={() => <Redirect to="/" />} />
       </Switch>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,6 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import BookmarksRoundedIcon from '@material-ui/icons/BookmarksRounded';
 
 import Config from '../config.json';
@@ -34,10 +40,53 @@ const useStyles = makeStyles((theme) => ({
 
 function Landing() {
   const classes = useStyles();
+  const history=useHistory();
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
   const [loginStatus, setLoginStatus] = useState(false);
   const [user, setUser] = useState('');
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const handleLogout=(event)=>{
+    event.preventDefault();
+    fetch(`${Config.url}/login/quit`,{
+      header: {
+        'content-type': 'application/json'
+      },
+      method: 'GET',
+      credentials: 'include'
+    })
+    .then(()=>{
+      setLoginStatus(false);
+      setUser('');
+    })
+  }
+
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    }
+  }
+
+  const prevOpen = React.useRef(open);
   useEffect(() => {
-    fetch(`${Config.url}`, {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+    prevOpen.current = open;
+    fetch(`${Config.url}/check`, {
       'method': 'GET',
       'headers': {
         'content-type': 'application/json'
@@ -49,7 +98,6 @@ function Landing() {
       })
       .then((result) => {
         if (result.loginStatus === 'true') {
-          console.log(result);
           setLoginStatus(true);
           setUser(result.iss);
         }
@@ -73,7 +121,38 @@ function Landing() {
           </Typography>
           {
             (loginStatus === true) ?
-              <Button style={{color: 'white'}}>{`Welcome, ${user}`}</Button>
+              <>
+                <Button
+                  ref={anchorRef}
+                  aria-controls={open ? 'menu-list-grow' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleToggle}
+                  style={{ color: 'white' }}
+                >
+                  {user}
+                </Button>
+                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                          <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                            <MenuItem>
+                              <Link to='/console'>
+                                Console
+                              </Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              </>
               :
               <Link to="/login">
                 <Button style={{ color: 'white' }}>Login</Button>
