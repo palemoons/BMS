@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -35,10 +35,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
-    let consolePath = '/';
+    let consolePath = '/console';
     const history = useHistory();
     const classes = useStyles();
     const userRef = useRef(), pwdRef = useRef();
+    const [loginErr, setLoginErr] = useState(false);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -54,8 +55,12 @@ export default function SignIn() {
             },
         })
             .then(res => {
-                if (res.status === 200) {
+                if (res.ok) {
+                    setLoginErr(false);
                     history.push(consolePath);
+                }
+                else {
+                    setLoginErr(true);
                 }
             })
     }
@@ -82,8 +87,9 @@ export default function SignIn() {
                         id="username"
                         label="Username"
                         name="username"
-                        autoComplete="username"
                         autoFocus
+                        error={loginErr ? true : false}
+
                     />
                     <TextField
                         inputRef={pwdRef}
@@ -95,11 +101,8 @@ export default function SignIn() {
                         label="Password"
                         type="password"
                         id="password"
-                        autoComplete="current-password"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
+                        error={loginErr ? true : false}
+                        helperText={loginErr ? 'Invalid username or password' : false}
                     />
                     <Button
                         type="submit"
