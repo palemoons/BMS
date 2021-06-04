@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,6 +10,7 @@ import BookmarksRoundedIcon from '@material-ui/icons/BookmarksRounded';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
 import Config from '../config.json';
 
 
@@ -34,24 +35,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
+    let consolePath = '/';
+    const history = useHistory();
     const classes = useStyles();
     const userRef = useRef(), pwdRef = useRef();
+
     function handleSubmit(event) {
         event.preventDefault();
         fetch(`${Config.url}/login`, {
+            method: 'POST',
+            credentials: 'include',
             body: JSON.stringify({
                 "user": userRef.current.value,
                 "pwd": pwdRef.current.value
             }),
-            cache: 'no-cache',
-            credentials: 'same-origin',
             headers: {
                 'content-type': 'application/json'
             },
-            method: 'POST',
-            mode: 'cors',
         })
-        .then(response => console.log(response))
+            .then(res => {
+                if (res.status === 200) {
+                    history.push(consolePath);
+                }
+            })
     }
 
     return (
