@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -23,7 +24,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { ClickAwayListener, MenuItem, MenuList, Popper } from '@material-ui/core';
 
 import Config from '../config.json';
 
@@ -33,6 +34,11 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
     },
+    title: {
+        flexGrow: 1,
+        textAlign: 'center'
+    }
+    ,
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(['width', 'margin'], {
@@ -95,11 +101,18 @@ const useStyles = makeStyles((theme) => ({
 function Console() {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const anchorRef = useRef(null);
+    const [userOpen, setUserOpen] = useState(false);
+    const prevOpen = useRef(userOpen);
+    const [open, setOpen] = useState(false);
     const [loginStatus, setLoginStatus] = useState(false);
     const [user, setUser] = useState('');
 
     useEffect(() => {
+        if (prevOpen.current === true && userOpen === false) {
+            anchorRef.current.focus();
+        }
+        prevOpen.current = userOpen;
         fetch(`${Config.url}/check`, {
             'method': 'GET',
             'headers': {
@@ -122,6 +135,18 @@ function Console() {
             })
     })
 
+    const handleToggle = () => {
+        setUserOpen((prevOpen) => (!prevOpen));
+    }
+
+    const handleClose = (event) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return;
+        }
+
+        setUserOpen(false);
+    };
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -129,6 +154,22 @@ function Console() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const handleLogout = (event) => {
+        event.preventDefault();
+        fetch(`${Config.url}/login/quit`, {
+            header: {
+                'content-type': 'application/json'
+            },
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(() => {
+                setLoginStatus(false);
+                setUser('');
+            })
+            .catch(() => alert('与服务器连接时发生错误'))
+    }
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -139,17 +180,17 @@ function Console() {
             >
                 <DialogContent>Error</DialogContent>
                 <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            登录会话已超时，请重新登录！
+                    <DialogContentText id="alert-dialog-description">
+                        登录会话已超时，请重新登录！
           </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary">
-            <Link to='/'>
-                确定
+                </DialogContent>
+                <DialogActions>
+                    <Button color="primary">
+                        <Link to='/'>
+                            确定
             </Link>
-          </Button>
-        </DialogActions>
+                    </Button>
+                </DialogActions>
             </Dialog>
             <AppBar
                 position="fixed"
@@ -169,10 +210,39 @@ function Console() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap className={classes.title}>
                         Book Management System
                     </Typography>
-                    <Button style={{ color: 'white' }}>{user}</Button>
+                    <Button
+                        ref={anchorRef}
+                        aria-describedby='userPopper'
+                        type='button'
+                        onClick={handleToggle}
+                        style={{ color: 'white' }}>
+                        {user}
+                    </Button>
+                    <Popper
+                        id='userPopper'
+                        open={userOpen}
+                        disablePortal
+                        anchorEl={anchorRef.current}>
+                        <Paper>
+                            <ClickAwayListener onClickAway={handleClose}>
+                                <MenuList autoFocusItem={userOpen} id="menu-list-grow">
+                                    <MenuItem>
+                                        <Link
+                                            to='/'
+                                            style={{ color: 'inherit' }}>
+                                            Homepage
+                                </Link>
+                                    </MenuItem>
+                                    <MenuItem onClick={handleLogout}>
+                                        Logout
+                                </MenuItem>
+                                </MenuList>
+                            </ClickAwayListener>
+                        </Paper>
+                    </Popper>
                 </Toolbar>
             </AppBar>
             <Drawer

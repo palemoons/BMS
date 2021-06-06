@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -40,9 +40,9 @@ const useStyles = makeStyles((theme) => ({
 
 function Landing() {
   const classes = useStyles();
-  const history=useHistory();
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+  const prevOpen = useRef(open);
   const [loginStatus, setLoginStatus] = useState(false);
   const [user, setUser] = useState('');
 
@@ -58,29 +58,22 @@ function Landing() {
     setOpen(false);
   };
 
-  const handleLogout=(event)=>{
+  const handleLogout = (event) => {
     event.preventDefault();
-    fetch(`${Config.url}/login/quit`,{
+    fetch(`${Config.url}/login/quit`, {
       header: {
         'content-type': 'application/json'
       },
       method: 'GET',
       credentials: 'include'
     })
-    .then(()=>{
-      setLoginStatus(false);
-      setUser('');
-    })
+      .then(() => {
+        setLoginStatus(false);
+        setUser('');
+      })
+      .catch(() => alert('与服务器连接时发生错误'))
   }
 
-  function handleListKeyDown(event) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    }
-  }
-
-  const prevOpen = React.useRef(open);
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
@@ -139,9 +132,11 @@ function Landing() {
                     >
                       <Paper>
                         <ClickAwayListener onClickAway={handleClose}>
-                          <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                          <MenuList autoFocusItem={open} id="menu-list-grow">
                             <MenuItem>
-                              <Link to='/console'>
+                              <Link
+                                style={{ color: 'inherit' }}
+                                to='/console'>
                                 Console
                               </Link>
                             </MenuItem>
