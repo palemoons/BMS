@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Button, Grid, Paper, TextField } from '@material-ui/core';
+
+import Config from '../config.json';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,21 +30,50 @@ function ImportBook() {
     const isDouble2 = /^[0-9]+(.[0-9]{1,2})?$/;
     const isN = /^\d+$/;
     const classes = useStyles();
-    const bookId = useRef(), category = useRef(), bookTitle = useRef(), press = useRef(), pubDate = useRef(), author = useRef(), price = useRef(), total = useRef(), stock = useRef();
+    const bookId = useRef(''), category = useRef(''), bookTitle = useRef(''), press = useRef(''), pubDate = useRef(''), author = useRef(''), price = useRef(''), total = useRef(''), stock = useRef('');
     const [pubErr, setPubErr] = useState(false);
     const [priceErr, setPriceErr] = useState(false);
     const [totalErr, setTotalErr] = useState(false);
     const [stockErr, setStockErr] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState(false);
 
     const handleSingleSubmit = (event) => {
         event.preventDefault();
+        fetch(`${Config.url}/book/single-import`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "book_id": bookId.current.value,
+                'category': category.current.value,
+                'book_title': bookTitle.current.value,
+                'press': press.current.value,
+                'pub_date': pubDate.current.value,
+                'author': author.current.value,
+                'price': price.current.value,
+                'total': total.current.value,
+                'stock': stock.current.value
+            })
+        })
+            .then(res => {
+                // TODO
+            })
+    }
+    const singleSubmitCheck = () => {
+        (pubErr || priceErr || totalErr || stockErr || bookId.current.value === '' || category.current.value === '' || bookTitle.current.value === '' || author.current.value === '' || press.current.value === '' || pubDate.current.value === '' || price.current.value === '' || total.current.value === '' || stock.current.value === '')
+            ?
+            setSubmitStatus(false)
+            :
+            setSubmitStatus(true)
     }
     return (
         <>
             <Paper className={classes.root}>
                 <Typography variant='h4' component='h1' className={classes.title}>导入书籍</Typography>
                 <Typography variant='h5' component='h2' className={classes.subtitle}>单本入库</Typography>
-                <form noValidate onSubmit={handleSingleSubmit}>
+                <form noValidate onSubmit={handleSingleSubmit} onChange={singleSubmitCheck}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -144,7 +175,7 @@ function ImportBook() {
                             type='submit'
                             variant='contained'
                             color='primary'
-                            disabled={(pubErr || priceErr || totalErr || stockErr || bookId.current.value === '' || category.current.value === '' || bookTitle.current.value === '' || author.current.value === '' || press.current.value === '' || pubDate.current.value === '' || price.current.value === '' || total.current.value === '' || stock.current.value === '')}
+                            disabled={!submitStatus}
                         >
                             入库
                     </Button>
