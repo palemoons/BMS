@@ -29,6 +29,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { ClickAwayListener, MenuItem, MenuList, Popper } from '@material-ui/core';
 
+import ImportBook from '../Components/ImportBook';
+import ManageBook from '../Components/ManageBook';
+import SearchBook from '../Components/SearchBook';
+import ManageCard from '../Components/ManageCard';
 import Config from '../config.json';
 
 const drawerWidth = 240;
@@ -112,7 +116,7 @@ function Console() {
     const [userOpen, setUserOpen] = useState(false);
     const prevOpen = useRef(userOpen);
     const [open, setOpen] = useState(false);
-    const [loginStatus, setLoginStatus] = useState(false);
+    const [loginStatus, setLoginStatus] = useState(true);
     const [user, setUser] = useState('');
     const [menuIndex, setMenuIndex] = useState(0);
 
@@ -294,19 +298,19 @@ function Console() {
                         </ListItemIcon>
                         <ListItemText primary='图书入库' />
                     </ListItem>
-                    <ListItem button key='图书查询'>
+                    <ListItem button key='图书查询' onClick={() => { setMenuIndex(1) }}>
                         <ListItemIcon>
                             <SearchIcon />
                         </ListItemIcon>
                         <ListItemText primary='图书查询' />
                     </ListItem>
-                    <ListItem button key='借还书籍'>
+                    <ListItem button key='借还书籍' onClick={() => { setMenuIndex(2) }}>
                         <ListItemIcon>
                             <ImportExportIcon />
                         </ListItemIcon>
                         <ListItemText primary='借还书籍' />
                     </ListItem>
-                    <ListItem button key='借书证管理'>
+                    <ListItem button key='借书证管理' onClick={() => { setMenuIndex(3) }}>
                         <ListItemIcon>
                             <AssignmentIndIcon />
                         </ListItemIcon>
@@ -324,32 +328,4 @@ function Console() {
     )
 }
 
-function ImportBook() {
-    return (
-        <>
-        <div>hello world.</div>
-        </>
-    )
-}
-
-function SearchBook() {
-    return (
-        <>
-        </>
-    )
-}
-
-function ManageBook() {
-    return (
-        <>
-        </>
-    )
-}
-
-function ManageCard() {
-    return (
-        <>
-        </>
-    )
-}
 export default Console;
