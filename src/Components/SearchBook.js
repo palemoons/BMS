@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import SearchBar from './SearchBar';
+import BookList from './BookList';
 
-function SearchBook(){
-    return(
+function SearchBook() {
+    const [res, setRes] = useState([]);
+    return (
         <>
-        <div>hello, world.</div>
+            <SearchBar setRes={setRes} />
+            <BookList res={res} />
         </>
     )
 }
