@@ -22,3 +22,5 @@ $ yarn start
 
 ## 参考文章
 - [结合React创建Electron桌面应用](https://zhuanlan.zhihu.com/p/29164782)
+- [How to upload and read CSV files in React.js](https://stackoverflow.com/questions/44769051/how-to-upload-and-read-csv-files-in-react-js)
+- [Uploading files using 'fetch' and 'FormData'](https://muffinman.io/blog/uploading-files-using-fetch-multipart-form-data/)
