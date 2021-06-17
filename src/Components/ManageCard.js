@@ -182,6 +182,18 @@ function DeleteCard() {
                     {mes}
                 </MuiAlert>
             </Snackbar>
+            <Dialog open={dialogOpen}>
+                <DialogTitle>确认删除？</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        在删除之前请确认该用户所借书籍已全部归还！
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => { handleDeleteSubmit(); setDialogOpen(false) }}>确认</Button>
+                    <Button onClick={() => { setDialogOpen(false) }}>取消</Button>
+                </DialogActions>
+            </Dialog>
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -206,20 +218,7 @@ function DeleteCard() {
                             >
                                 删除
                             </Button>
-                            <Dialog open={dialogOpen}>
-                                <DialogTitle>确认删除？</DialogTitle>
-                                <DialogContent>
-                                    <Typography>
-                                        在删除之前请确认该用户所借书籍已全部归还！
-                                    </Typography>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={() => { handleDeleteSubmit(); setDialogOpen(false) }}>确认</Button>
-                                    <Button onClick={() => { setDialogOpen(false) }}>取消</Button>
-                                </DialogActions>
-                            </Dialog>
                         </form>
-
                     </Container>
                 </AccordionDetails>
             </Accordion>
