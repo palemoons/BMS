@@ -1,23 +1,25 @@
 # README
 
-> 施工中，请绕行✋
+> 大作业完成了，大概不会有大规模修改了（懒
 
 ## 简介
 数据库系统原理大作业：图书管理系统`BMS`
 
-## 预期使用的技术栈
+组件中有些对于`SnackBar`消息状态的处理不是很合理，不过因为时间问题都还没有修改，~~能用就行~~。
+
+## 使用的技术栈
 - 前端：`Electron`+`Create-react-app`+`Material-UI`
 - 后端：`Express`+`MySQL Server`
 
 ## Building
 运行程序
 ```
-$ yarn run build
-$ yarn run dev
+yarn run build
+yarn run dev
 ```
 在浏览器中进行热调试
 ```
-$ yarn start
+yarn start
 ```
 
 ## 参考文章
