@@ -9,6 +9,7 @@ function createWindow () {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+  win.setMenu(null);
   win.loadURL('http://localhost:3000/');
   win.loadFile('./build/index.html');
 }
